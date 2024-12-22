@@ -1,62 +1,70 @@
 import requests
 from time import sleep
 from pprint import pprint
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
+import LiveGame
+from NextGame import NextGame
+import TimeDateHelpers
 
-class LiveGame:
-    def __init__(self, gameId) -> None:
-        self.gameId = gameId
-        print('Wings Game Today: ', gameId)
-        game_details_url = 'https://api-web.nhle.com/v1/gamecenter/{current_game_id}/boxscore'.format(current_game_id=self.gameId)
-        game_details_response = requests.get(game_details_url)
-        self.game_details_dict = game_details_response.json()
-        self.team_goals = 0
-        self.team_abbrev = 'DET'
-        self.team_side = ''
+TEAM_ABBREV = 'DET'
+TIME_ZONE = 'US/Eastern'
 
-    def getIsLive(self):
-        isLive = self.game_details_dict['gameState'] == 'LIVE'
-        print('Is game: ', self.gameId, ' live? ', isLive)
-        return isLive
+def watchLiveGame():
+    currentGame = LiveGame('2024020412')
 
-    def getScore(self):
-        home_team = self.game_details_dict['homeTeam']
-        away_team = self.game_details_dict['awayTeam']
+    # currentGame.getIsLive()
+    # currentGame.getScore()
 
-        pprint(home_team['abbrev'] + ': ' + str(home_team['score']))
-        pprint(away_team['abbrev'] + ': ' + str(away_team['score']))
+    while (currentGame.getIsLive() == True):
+        if (currentGame.home_or_away == ''):
+            currentGame.getTeamSide()
+        score = currentGame.getScore()
+        currentGame.hasScoreIncreased(score)
+        pprint('~~~~~~~~~~~~~~~~~~~')
+        sleep(1)
+
+
+def main():
+    nextGame = NextGame('DET')
+    nextGame.getNextGame()
+
+    isGameToday = nextGame.isNextGameToday()
+    gameTime = nextGame.getTime()
+    gameId = nextGame.nextGameId
+
+    if (isGameToday):
+        print("The wings are playing today at...", gameTime)
+        print("Game Id: ", gameId)
+
+        timeDela = TimeDateHelpers.getTimeUntilGame(gameTime)
+        totalSeconds = TimeDateHelpers.getSecondsToTime(timeDela)
+        TimeDateHelpers.sleepUntilGame(totalSeconds)
         
-        self.hasScoreChanged(int(home_team['score']), int(away_team['score']))
+        liveGame = LiveGame.LiveGame(nextGame.nextGameId)
+        while True:
+            if(liveGame.getIsLive()):
+                break
+            sleep(1)
 
-    def getTeamSide(self):
-        home_team = self.game_details_dict['homeTeam']['abbrev']
-        away_team = self.game_details_dict['awayTeam']['abbrev']
+        while(liveGame.getIsLive()):
+         liveGame.getScore()
+         sleep(1)
 
-        if (home_team == self.team_abbrev):
-            self.team_side = 'homeTeam'
-        if (away_team == self.team_abbrev):
-            self.team_side = 'awayTeam'
 
-    def hasScoreChanged(self, home_score, away_score):
-        if (self.getTeamSide == 'homeTeam' and home_score > self.team_goals):
-            print('WINGS SCORED!')
-            return True
-        if (self.getTeamSide == 'awayTeam' and away_score > self.team_goals):
-            print('WINGS SCORED!')
-            return True
-        print('Waiting for another goal ... ')
-        return False
+    else:
+        print("The wings will be playing next at ", gameTime)
+        print("Game Id: ", gameId)
 
-        
-    
+        timeTomorrow = TimeDateHelpers.getTimeForTomorrowMorning()
+        secondsToSleep = TimeDateHelpers.getSecondsUntilTomorrowCheck(timeTomorrow)
+        print("Sleeping for ", secondsToSleep, " seconds until ", timeTomorrow)
+        sleep(secondsToSleep)
 
-currentGame = LiveGame('2024020412')
+if __name__ == "__main__":
+    main()
 
-# currentGame.getIsLive()
-# currentGame.getScore()
 
-while (currentGame.getIsLive() == True):
-    currentGame.getScore()
-    pprint('~~~~~~~~~~~~~~~~~~~')
-    sleep(1)
+
+
+ 

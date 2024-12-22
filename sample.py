@@ -53,7 +53,7 @@ for weekly_game in weekly_schedule_games_dict:
 #There's a game today, let's check if it's live
 #And if so what is the score
 print('Wings Game Today: 2024020412')
-game_details_url = 'https://api-web.nhle.com/v1/gamecenter/{current_game_id}/boxscore'.format(current_game_id=2024020412)
+game_details_url = 'https://api-web.nhle.com/v1/gamecenter/{current_game_id}/boxscore'.format(current_game_id=2024020507)
 game_details_response = requests.get(game_details_url)
 game_details_dict = game_details_response.json()
 
