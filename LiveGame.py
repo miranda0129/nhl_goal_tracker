@@ -1,7 +1,5 @@
 import requests
-from time import sleep
 from pprint import pprint
-from datetime import datetime
 
 class LiveGame:
     def __init__(self, gameId) -> None:
@@ -32,9 +30,9 @@ class LiveGame:
         pprint(away_team['abbrev'] + ': ' + str(away_team['score']))
         
         if self.home_or_away == 'homeTeam':
-            return home_team['score']
+            return [home_team['score'], away_team['score']]
         if self.home_or_away == 'awayTeam':
-            return away_team['score']
+            return [away_team['score'], home_team['score']]
 
     def getTeamSide(self):
         home_team = self.game_details_dict['homeTeam']['abbrev']
@@ -53,5 +51,4 @@ class LiveGame:
             self.team_goals = score
             return True
         self.team_goals = score
-        print('Waiting for another goal ... ')
         return False  

@@ -1,8 +1,5 @@
-import requests
 from time import sleep
 from pprint import pprint
-from datetime import datetime, timedelta
-import pytz
 import LiveGame
 from NextGame import NextGame
 import TimeDateHelpers
@@ -39,7 +36,7 @@ def runLoop():
          if (liveGame.home_or_away == ''):
             liveGame.getTeamSide()
          score = liveGame.getScore()
-         liveGame.hasScoreIncreased(score)
+         liveGame.hasScoreIncreased(score[0])
          pprint('~~~~~~~~~~~~~~~~~~~')
          sleep(1)
 

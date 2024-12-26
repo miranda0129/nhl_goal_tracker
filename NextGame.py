@@ -1,4 +1,3 @@
-from pprint import pprint
 import requests
 from datetime import datetime
 import pytz
