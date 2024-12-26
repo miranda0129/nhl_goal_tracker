@@ -47,11 +47,11 @@ class LiveGame:
             print('your team is away')
             self.home_or_away = 'awayTeam'
 
-    #need to account for protested goals, score may go down
     def hasScoreIncreased(self, score):
         if (score > self.team_goals):
-            pprint('WINGSS SCORED!!!!!')
-            self.team_goals += 1
+            pprint('---> SCORE!!! <---')
+            self.team_goals = score
             return True
+        self.team_goals = score
         print('Waiting for another goal ... ')
         return False  

@@ -10,33 +10,20 @@ import TimeDateHelpers
 TEAM_ABBREV = 'DET'
 TIME_ZONE = 'US/Eastern'
 
-def watchLiveGame():
-    currentGame = LiveGame('2024020412')
 
-    # currentGame.getIsLive()
-    # currentGame.getScore()
-
-    while (currentGame.getIsLive() == True):
-        if (currentGame.home_or_away == ''):
-            currentGame.getTeamSide()
-        score = currentGame.getScore()
-        currentGame.hasScoreIncreased(score)
-        pprint('~~~~~~~~~~~~~~~~~~~')
-        sleep(1)
-
-
-def main():
-    nextGame = NextGame('DET')
+def runLoop():
+    nextGame = NextGame(TEAM_ABBREV)
     nextGame.getNextGame()
 
     isGameToday = nextGame.isNextGameToday()
     gameTime = nextGame.getTime()
     gameId = nextGame.nextGameId
 
-    if (isGameToday):
-        print("The wings are playing today at...", gameTime)
-        print("Game Id: ", gameId)
+    print("The wings are playing next at...", gameTime)
+    print("Game Id: ", gameId)
 
+    if (isGameToday):
+        #wait until game goes live
         timeDela = TimeDateHelpers.getTimeUntilGame(gameTime)
         totalSeconds = TimeDateHelpers.getSecondsToTime(timeDela)
         TimeDateHelpers.sleepUntilGame(totalSeconds)
@@ -47,22 +34,28 @@ def main():
                 break
             sleep(1)
 
+        #track score while game is live
         while(liveGame.getIsLive()):
-         liveGame.getScore()
+         if (liveGame.home_or_away == ''):
+            liveGame.getTeamSide()
+         score = liveGame.getScore()
+         liveGame.hasScoreIncreased(score)
+         pprint('~~~~~~~~~~~~~~~~~~~')
          sleep(1)
+
+        runLoop()
 
 
     else:
-        print("The wings will be playing next at ", gameTime)
-        print("Game Id: ", gameId)
-
+        #check for game again tomorrow
         timeTomorrow = TimeDateHelpers.getTimeForTomorrowMorning()
         secondsToSleep = TimeDateHelpers.getSecondsUntilTomorrowCheck(timeTomorrow)
         print("Sleeping for ", secondsToSleep, " seconds until ", timeTomorrow)
         sleep(secondsToSleep)
+        runLoop()
 
 if __name__ == "__main__":
-    main()
+    runLoop()
 
 
 

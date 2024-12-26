@@ -21,8 +21,6 @@ def getTimeForTomorrowMorning():
     eastern_tz = pytz.timezone('US/Eastern')
     tomorrow = datetime.now(eastern_tz) + timedelta(days = 1)
     tomorrowMorning = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 7, 00, tzinfo=eastern_tz)
-    print("Tomorrow morning: ", tomorrowMorning)
-    #ret = pytz.timezone(eastern_tz).localize(tomorrowMorning)
     return tomorrowMorning
 
 def getSecondsUntilTomorrowCheck(time):
