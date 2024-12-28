@@ -1,78 +1,87 @@
 import pygame
-import threading
-import time
-import queue
+from NextGame import NextGame
+from time import sleep
 
-# Function to run the Pygame window
-def run_pygame(shared_queue):
-    pygame.init()
+TEAM_ABBREV = 'DET'
+TIME_ZONE = 'US/Eastern'
 
-    # Set up the display
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption('Pygame Animation with Thread')
+class Display:
+    def __init__(self) -> None:
+        pygame.init()
+        self.font = pygame.font.Font(None, 74) 
+        self.screen = pygame.display.set_mode((600, 400))
+        self.redColour = (255, 19, 0)
 
-    # Set up font
-    font = pygame.font.SysFont('Arial', 50)
+    def getStartY(self, text_lines):
+        # Calculate the total height of all lines
+        line_spacing = self.font.get_linesize()  # Spacing between lines
+        total_text_height = len(text_lines) * line_spacing
 
-    # Text settings
-    text = "Hello, World!"
-    color = (255, 255, 255)
-    x, y = 250, 250
+        # Calculate the starting y-coordinate to center the text vertically
+        start_y = (self.screen.get_height() - total_text_height) // 2
+        return start_y
+    
+    def writeToScreen(self, text_lines):
+        y = start_y  
+        for line in text_lines:
+            text_surface = font.render(line, True, self.redColour)
+            text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
+            display.screen.blit(text_surface, text_rect)
+            y += 40  # Move to the next line (adjust based on font size and spacing)
+    
+    def displayGoal(self):
+        text_lines = ["GOAL!!"]
+        self.writeToScreen(text_lines)
+        
 
-    clock = pygame.time.Clock()
-    running = True
+nextGame = NextGame(TEAM_ABBREV)
+nextGame.getNextGame()
 
-    while running:
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+isGameToday = nextGame.isNextGameToday()
+gameTime = nextGame.getTime()
+gameId = nextGame.nextGameId
 
-        # Check for updates from the main thread via the queue
-        try:
-            new_x = shared_queue.get_nowait()  # Try to get updated position from the queue
-            x = new_x  # Update the position if there is new data
-        except queue.Empty:
-            pass  # If the queue is empty, just continue
+print("The wings are playing next at...", gameTime)
+print("Game Id: ", gameId)
 
-        # Fill the screen with black
-        screen.fill((0, 0, 0))
+display = Display()
+font = pygame.font.Font(None, 74)  # Use default font, size 74
+game_time_text_lines = [
+    "The next game is at ",
+    gameTime.strftime("%B %d, %H:%M")
+]
 
-        # Render and display the text
-        text_surface = font.render(text, True, color)
-        screen.blit(text_surface, (x, y))
+start_y = display.getStartY(game_time_text_lines)
+counter = 0
 
-        # Update the screen
-        pygame.display.flip()
-        clock.tick(30)  # Limit to 30 FPS
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: 
+            running = False
 
-    pygame.quit()
+    display.screen.fill((255, 255, 255))  # white background
+    
+    print("doing other work")
+    counter += 1
+    sleep(1)
 
-# Function to update the animation in the main function
-def main():
-    # Create a queue for communication between the threads
-    shared_queue = queue.Queue()
+    if (counter > 5):
+        if ((counter%5) == 0):
+            display.displayGoal()
+        else:
+          text_lines = [
+            "{} : {}".format(counter, counter)
+          ]
+          display.writeToScreen(text_lines)
+    else:
+        display.writeToScreen(game_time_text_lines)
 
-    # Create and start the Pygame thread
-    pygame_thread = threading.Thread(target=run_pygame, args=(shared_queue,))
-    pygame_thread.daemon = True  # Daemonize the thread so it exits with the main program
-    pygame_thread.start()
+    # Update display
+    pygame.display.flip()
 
-    # Simulate the main function sending updated information to Pygame
-    x_position = 0
-    try:
-        while True:
-            # Simulate some logic in the main thread (e.g., changing position)
-            x_position += 5
-            if x_position > 800:
-                x_position = -100  # Reset position
+# Quit Pygame
+pygame.quit()
 
-            # Send the updated position to the Pygame thread via the queue
-            shared_queue.put(x_position)
 
-            time.sleep(0.1)  # Simulate doing other work
-    except KeyboardInterrupt:
-        print("Main program exiting.")
 
-if __name__ == "__main__":
-    main()

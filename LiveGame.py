@@ -18,7 +18,6 @@ class LiveGame:
         print('GameId: ', self.gameId, ' GameState: ', gameState)
         return isLive
 
-    #return both scores as dict
     def getScore(self):
         game_details_response = requests.get(self.game_details_url)
         self.game_details_dict = game_details_response.json()
