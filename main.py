@@ -3,6 +3,8 @@ from pprint import pprint
 import LiveGame
 from NextGame import NextGame
 import TimeDateHelpers
+import pygame
+from Display import Display
 
 TEAM_ABBREV = 'DET'
 TIME_ZONE = 'US/Eastern'
@@ -11,13 +13,14 @@ TIME_ZONE = 'US/Eastern'
 def runLoop():
     nextGame = NextGame(TEAM_ABBREV)
     nextGame.getNextGame()
-
     isGameToday = nextGame.isNextGameToday()
     gameTime = nextGame.getTime()
     gameId = nextGame.nextGameId
 
     print("The wings are playing next at...", gameTime)
     print("Game Id: ", gameId)
+    display.displayNextGame(gameTime)
+    pygame.display.flip()
 
     if (isGameToday):
         #wait until game goes live
@@ -33,12 +36,12 @@ def runLoop():
 
         #track score while game is live
         while(liveGame.getIsLive()):
-         if (liveGame.home_or_away == ''):
-            liveGame.getTeamSide()
-         score = liveGame.getScore()
-         liveGame.hasScoreIncreased(score[0])
-         pprint('~~~~~~~~~~~~~~~~~~~')
-         sleep(1)
+            if (liveGame.home_or_away == ''):
+             liveGame.getTeamSide()
+        score = liveGame.getScore()
+        liveGame.hasScoreIncreased(score[0])
+        pprint('~~~~~~~~~~~~~~~~~~~')
+        sleep(1)
 
         runLoop()
 
@@ -52,7 +55,17 @@ def runLoop():
         runLoop()
 
 if __name__ == "__main__":
-    runLoop()
+    display = Display() 
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: 
+                running = False
+        display.screen.fill((255, 255, 255))
+        runLoop()
+        pygame.display.flip()
+    pygame.quit()
+
 
 
 
