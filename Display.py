@@ -27,7 +27,7 @@ class Display:
             text_surface = self.font.render(line, True, self.redColour)
             text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
             self.screen.blit(text_surface, text_rect)
-            y += 40  # Move to the next line (adjust based on font size and spacing)
+            y += 50  # Move to the next line (adjust based on font size and spacing)
     
     def displayGoal(self):
         text_lines = ["GOAL!!"]
@@ -42,7 +42,7 @@ class Display:
     def displayNextGame(self, nextGameTime):
         text_lines = [
             "The next game is at ",
-            nextGameTime.strftime("%B %d, %H:%M")
+            nextGameTime
         ]
         self.writeToScreen(text_lines)
 

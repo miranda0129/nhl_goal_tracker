@@ -28,4 +28,9 @@ def getSecondsUntilTomorrowCheck(time):
     timeDelta = time - datetime.now(eastern_tz)
     return timeDelta.total_seconds()
 
+def toTwelveHourTime(time_24):
+    print(type(time_24))
+    time_12 = time_24.strftime("%B %d, %I:%M %p")
+    return time_12
+
 

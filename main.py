@@ -19,7 +19,7 @@ def runLoop():
 
     print("The wings are playing next at...", gameTime)
     print("Game Id: ", gameId)
-    display.displayNextGame(gameTime)
+    display.displayNextGame(TimeDateHelpers.toTwelveHourTime(gameTime))
     pygame.display.flip()
 
     if (isGameToday):
