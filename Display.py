@@ -9,7 +9,7 @@ class Display:
     def __init__(self) -> None:
         pygame.init()
         self.font = pygame.font.Font(None, 62) 
-        self.screen = pygame.display.set_mode((480, 320))
+        self.screen = pygame.display.set_mode((480, 320), pygame.FULLSCREEN)
         self.redColour = (255, 19, 0)
 
     def getStartY(self, text_lines):
@@ -45,47 +45,6 @@ class Display:
             nextGameTime.strftime("%B %d, %H:%M")
         ]
         self.writeToScreen(text_lines)
-
-        
-
-# nextGame = NextGame(TEAM_ABBREV)
-# nextGame.getNextGame()
-
-# isGameToday = nextGame.isNextGameToday()
-# gameTime = nextGame.getTime()
-# gameId = nextGame.nextGameId
-
-# print("The wings are playing next at...", gameTime)
-# print("Game Id: ", gameId)
-
-# display = Display() 
-# counter = 0
-
-# running = True
-# while running:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT: 
-#             running = False
-
-#     display.screen.fill((255, 255, 255))  # white background
-    
-#     print("doing other work")
-#     counter += 1
-#     sleep(1)
-
-#     if (counter > 3):
-#         if ((counter%5) == 0):
-#             display.displayGoal()
-#         else:
-#           display.displayScore([counter, counter-1])
-#     else:
-#         display.displayNextGame(gameTime)
-
-#     # Update display
-#     pygame.display.flip()
-
-# # Quit Pygame
-# pygame.quit()
 
 
 
