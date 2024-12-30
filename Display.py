@@ -8,8 +8,8 @@ TIME_ZONE = 'US/Eastern'
 class Display:
     def __init__(self) -> None:
         pygame.init()
-        self.font = pygame.font.Font(None, 74) 
-        self.screen = pygame.display.set_mode((600, 400))
+        self.font = pygame.font.Font(None, 62) 
+        self.screen = pygame.display.set_mode((480, 320))
         self.redColour = (255, 19, 0)
 
     def getStartY(self, text_lines):
