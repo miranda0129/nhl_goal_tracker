@@ -39,7 +39,13 @@ def runLoop():
             if (liveGame.home_or_away == ''):
              liveGame.getTeamSide()
         score = liveGame.getScore()
-        liveGame.hasScoreIncreased(score[0])
+        display.displayScore(score)
+        pygame.display.flip()
+
+        if (liveGame.hasScoreIncreased(score[0])):
+                display.displayGoal()
+                pygame.display.flip()
+
         pprint('~~~~~~~~~~~~~~~~~~~')
         sleep(1)
 
