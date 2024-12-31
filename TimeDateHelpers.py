@@ -10,7 +10,6 @@ def getTimeUntilGame(time):
     return timeDelta
 
 def getSecondsToTime(timeDelta):
-    print("Time to sleep before game start", timeDelta)
     total_seconds = timeDelta.total_seconds()
     return total_seconds
 

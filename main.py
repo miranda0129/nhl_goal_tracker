@@ -61,8 +61,8 @@ def runLoop():
     if (isGameToday):
         checkForNextGame = False
 
-        sleepThread = threading.Thread(target=sleepUntilGame, daemon=True, args=gameTime)
-        if (not sleepThread.is_alive):
+        sleepThread = threading.Thread(target=sleepUntilGame, daemon=True, args=(gameTime,))
+        if (not sleepThread.is_alive()):
             sleepThread.start()
 
         if (gameOn):
