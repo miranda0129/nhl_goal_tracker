@@ -59,6 +59,7 @@ def runLoop():
     display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
     if (isGameToday):
+        checkForNextGame = False
 
         sleepThread = threading.Thread(target=sleepUntilGame, daemon=True, args=gameTime)
         if (not sleepThread.is_alive):
