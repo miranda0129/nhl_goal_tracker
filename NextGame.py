@@ -35,6 +35,3 @@ class NextGame:
         today_date = datetime.today().date()
         if (today_date == self.nextGameDay):
             return True
-
-    def getTime(self):
-        return self.nextGameTime

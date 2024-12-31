@@ -9,7 +9,7 @@ class Display:
     def __init__(self) -> None:
         pygame.init()
         self.font = pygame.font.Font(None, 62) 
-        self.screen = pygame.display.set_mode((480, 320), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((480, 320))
         self.redColour = (255, 19, 0)
 
     def getStartY(self, text_lines):
