@@ -1,6 +1,6 @@
 from time import sleep
 from pprint import pprint
-import LiveGame
+from LiveGame import LiveGame
 from NextGame import NextGame
 import TimeDateHelpers
 import pygame
@@ -11,32 +11,39 @@ TEAM_ABBREV = 'DET'
 TIME_ZONE = 'US/Eastern'
 
 checkForNextGame = True
+sleepForGame = True
+isGameToday = False
 gameOn = False
+
 nextGame = NextGame(TEAM_ABBREV)
+liveGame = None
+
 
 def sleepUntilTomorrow():
-        global checkForNextGame
-        #check for game again tomorrow
-        timeTomorrow = TimeDateHelpers.getTimeForTomorrowMorning()
-        secondsToSleep = TimeDateHelpers.getSecondsUntilTomorrowCheck(timeTomorrow)
-        print("Sleeping for ", secondsToSleep, " seconds until ", timeTomorrow)
-        sleep(secondsToSleep)
-        checkForNextGame = True
+    global checkForNextGame
+    timeTomorrow = TimeDateHelpers.getTimeForTomorrowMorning()
+    secondsToSleep = TimeDateHelpers.getSecondsUntilTomorrowCheck(timeTomorrow)
+    print("Sleeping for ", secondsToSleep, " seconds until ", timeTomorrow)
+    sleep(secondsToSleep)
+    checkForNextGame = True
 
 def sleepUntilGame(gameTime):
     global gameOn
     timeDela = TimeDateHelpers.getTimeUntilGame(gameTime)
     totalSeconds = TimeDateHelpers.getSecondsToTime(timeDela)
     print("Sleeping for ", totalSeconds, " seconds until ", gameTime)
-    TimeDateHelpers.sleepUntilGame(totalSeconds)
+    sleep(totalSeconds)
     gameOn = True
 
 
 def runLoop():
     global checkForNextGame
-    global nextGame
+    global isGameToday
+    global sleepForGame
     global gameOn
-    isGameToday = False
+
+    global nextGame
+    global liveGame
     
     if (checkForNextGame):
         nextGame.getNextGame()
@@ -46,46 +53,63 @@ def runLoop():
 
         print("The wings are playing next at...", gameTime)
         print("Game Id: ", gameId)
-        pygame.display.flip()
 
         if (not isGameToday):
-            print("threading for sleep")
             checkForNextGame = False
             worker = threading.Thread(target=sleepUntilTomorrow, daemon=True)
-            print(type(worker))
             worker.start()
-            print(worker.is_alive)
-
-    display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
     if (isGameToday):
         checkForNextGame = False
 
-        sleepThread = threading.Thread(target=sleepUntilGame, daemon=True, args=(gameTime,))
-        if (not sleepThread.is_alive()):
-            sleepThread.start()
+        if (liveGame == None):
+            liveGame = LiveGame(nextGame.nextGameId)
+
+        if (not gameOn):
+            display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
+
+            if (sleepForGame):
+                sleepForGame = False
+                sleepThread = threading.Thread(target=sleepUntilGame, daemon=True, args=(nextGame.nextGameTime,))
+                sleepThread.start()
 
         if (gameOn):
-            liveGame = LiveGame.LiveGame(nextGame.nextGameId)
-            while True:
-                if(liveGame.getIsLive()):
-                    break
-                sleep(1)
+            # while True:
+            #     if(liveGame.getIsLive()):
+            #         break
+            #     sleep(1)
 
             #track score while game is live
-            while(liveGame.getIsLive()):
+            if (liveGame.getIsLive()):
                 if (liveGame.home_or_away == ''):
-                 liveGame.getTeamSide()
-            score = liveGame.getScore()
-            display.displayScore(score)
-            pygame.display.flip()
+                    liveGame.getTeamSide()
+                score = liveGame.getScore()
 
-            if (liveGame.hasScoreIncreased(score[0])):
+                #[DET, other]
+                display.displayScore(score, [liveGame.team_abbrev, liveGame.vs_team_abbrev])
+
+                if (liveGame.hasScoreIncreased(score[0])):
                     display.displayGoal()
-                    pygame.display.flip()
 
-            pprint('~~~~~~~~~~~~~~~~~~~')
-            sleep(1)
+                pprint('~~~~~~~~~~~~~~~~~~~')
+
+            #reset once game is finished
+            elif (liveGame.isGameFinished()):
+                checkForNextGame = True
+                sleepForGame = True
+                gameOn = False
+                isGameToday = False
+                liveGame = None
+                print(checkForNextGame, sleepForGame, gameOn, isGameToday)
+
+            #wait for game to start
+            else:
+                display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
+
+        sleep(1)
+
+    else:
+         display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
 
 

@@ -17,7 +17,7 @@ class NextGame:
         #Get next game wings are playing
         for item in season_schedule_dict['games']:
             gameState = item['gameState']
-            if (gameState == 'FUT' or gameState == 'PRE'):
+            if (gameState == 'FUT' or gameState == 'PRE' or gameState == 'LIVE' or gameState == 'CRIT'):
                 self.nextGameId = item['id']
 
                 gameDayJson = item['startTimeUTC']
@@ -35,3 +35,4 @@ class NextGame:
         today_date = datetime.today().date()
         if (today_date == self.nextGameDay):
             return True
+        return False

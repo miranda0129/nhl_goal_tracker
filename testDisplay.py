@@ -2,13 +2,14 @@ import pygame
 from NextGame import NextGame
 from time import sleep
 from Display import Display
+import TimeDateHelpers
 
 TEAM_ABBREV = 'DET'
 nextGame = NextGame(TEAM_ABBREV)
 nextGame.getNextGame()
 
 isGameToday = nextGame.isNextGameToday()
-gameTime = nextGame.getTime()
+gameTime = nextGame.nextGameTime
 gameId = nextGame.nextGameId
 
 print("The wings are playing next at...", gameTime)
@@ -30,12 +31,13 @@ while running:
     sleep(1)
 
     if (counter > 3):
-        if ((counter%5) == 0):
-            display.displayGoal()
-        else:
-          display.displayScore([counter, counter])
+        display.displayGoal()
+    #     if ((counter%5) == 0):
+    #         display.displayGoal()
+    #     else:
+    #       display.displayScore([counter, counter])
     else:
-        display.displayNextGame(gameTime)
+        display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
     # Update display
     pygame.display.flip()

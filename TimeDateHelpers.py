@@ -1,7 +1,5 @@
-import requests
 from time import sleep
-from pprint import pprint
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import pytz
 
 def getTimeUntilGame(time):
@@ -12,9 +10,6 @@ def getTimeUntilGame(time):
 def getSecondsToTime(timeDelta):
     total_seconds = timeDelta.total_seconds()
     return total_seconds
-
-def sleepUntilGame(secondsUntilGame):
-    sleep(secondsUntilGame)
 
 def getTimeForTomorrowMorning():
     eastern_tz = pytz.timezone('US/Eastern')
