@@ -1,4 +1,5 @@
 import pygame
+from time import sleep
 
 TEAM_ABBREV = 'DET'
 TIME_ZONE = 'US/Eastern'
@@ -9,6 +10,7 @@ class Display:
         self.font = pygame.font.Font(None, 62) 
         self.screen = pygame.display.set_mode((480, 320), pygame.FULLSCREEN)
         self.redColour = (255, 19, 0)
+        self.whiteColour = (255, 255, 255)
         self.boldFont = pygame.font.Font(None, 99) 
 
     def getStartY(self, text_lines):
@@ -27,11 +29,27 @@ class Display:
             text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
             self.screen.blit(text_surface, text_rect)
             y += 60  # Move to the next line (adjust based on font size and spacing)
+
+    def writeToScreenFlipColour(self, text_lines, font):
+        y = self.getStartY(text_lines)  
+        for line in text_lines:
+            text_surface = font.render(line, True, self.whiteColour)
+            text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
+            self.screen.blit(text_surface, text_rect)
+            y += 60  # Move to the next line (adjust based on font size and spacing)
     
     def displayGoal(self):
         text_lines = ["GOAL!!"]
-        self.writeToScreen(text_lines, self.boldFont)
-        pygame.display.flip()
+
+        for counter in range (0, 3):
+            self.screen.fill((255, 255, 255))
+            self.writeToScreen(text_lines, self.boldFont)
+            pygame.display.flip()
+            sleep(1)
+            self.screen.fill(self.redColour)        
+            self.writeToScreenFlipColour(text_lines, self.boldFont)
+            pygame.display.flip()
+            sleep(1)
 
     def displayScore(self, score_matrix, team_matrix):
         text_lines = [
