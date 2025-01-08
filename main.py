@@ -31,12 +31,15 @@ def sleepUntilGame(gameTime):
     global gameOn
     timeDela = TimeDateHelpers.getTimeUntilGame(gameTime)
     totalSeconds = TimeDateHelpers.getSecondsToTime(timeDela)
-    print("Sleeping for ", totalSeconds, " seconds until ", gameTime)
-    sleep(totalSeconds)
+
+    if (totalSeconds > 0):
+        print("Sleeping for ", totalSeconds, " seconds until ", gameTime)
+        sleep(totalSeconds)
     gameOn = True
 
 
 def runLoop():
+    # 2024020642
     global checkForNextGame
     global isGameToday
     global sleepForGame
@@ -74,10 +77,7 @@ def runLoop():
                 sleepThread.start()
 
         if (gameOn):
-            # while True:
-            #     if(liveGame.getIsLive()):
-            #         break
-            #     sleep(1)
+            liveGame.update()
 
             #track score while game is live
             if (liveGame.getIsLive()):

@@ -10,8 +10,12 @@ class LiveGame:
         
         self.team_goals = 0
         self.team_abbrev = 'DET'
-        self.vs_team_abbrev = self.game_details_dict['awayTeam']['abbrev']
+        self.vs_team_abbrev = ''
         self.home_or_away = ''
+
+    def update(self):
+        self.game_details_response = requests.get(self.game_details_url)
+        self.game_details_dict = self.game_details_response.json()
 
     def getIsLive(self):
         gameState = self.game_details_dict['gameState']
@@ -54,11 +58,7 @@ class LiveGame:
 
     def hasScoreIncreased(self, score):
         if (score > self.team_goals):
-            print('team goals = ', self.team_goals)
-            print('score = ', score)
             pprint('---> SCORE!!! <---')
             self.team_goals = score
-            print('team goals = ', self.team_goals)
-            print('score = ', score)
             return True
         return False  

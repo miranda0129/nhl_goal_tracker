@@ -28,7 +28,7 @@ class Display:
             text_surface = font.render(line, True, self.redColour)
             text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
             self.screen.blit(text_surface, text_rect)
-            y += 60  # Move to the next line (adjust based on font size and spacing)
+            y += 80  # Move to the next line (adjust based on font size and spacing)
 
     def writeToScreenFlipColour(self, text_lines, font):
         y = self.getStartY(text_lines)  
@@ -36,7 +36,7 @@ class Display:
             text_surface = font.render(line, True, self.whiteColour)
             text_rect = text_surface.get_rect(centerx=self.screen.get_width() // 2, y=y)  # Position each line
             self.screen.blit(text_surface, text_rect)
-            y += 60  # Move to the next line (adjust based on font size and spacing)
+            y += 80  # Move to the next line (adjust based on font size and spacing)
     
     def displayGoal(self):
         text_lines = ["GOAL!!"]
@@ -53,7 +53,7 @@ class Display:
 
     def displayScore(self, score_matrix, team_matrix):
         text_lines = [
-            "{} VS {}".format(team_matrix[0], team_matrix[1]),
+            "{} v {}".format(team_matrix[0], team_matrix[1]),
             "{} : {}".format(score_matrix[0], score_matrix[1])
           ]
         self.writeToScreen(text_lines, self.boldFont)
