@@ -113,6 +113,8 @@ def runLoop():
 
 
 if __name__ == "__main__":
+    pygame.init()
+    pygame.mouse.set_visible(False)
     display = Display() 
     running = True
     while running:
