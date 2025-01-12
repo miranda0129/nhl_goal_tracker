@@ -8,7 +8,7 @@ class Display:
     def __init__(self) -> None:
         pygame.init()
         self.font = pygame.font.Font(None, 62) 
-        self.screen = pygame.display.set_mode((480, 320), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((480, 320))
         self.redColour = (255, 19, 0)
         self.whiteColour = (255, 255, 255)
         self.boldFont = pygame.font.Font(None, 99) 
@@ -19,7 +19,7 @@ class Display:
         total_text_height = len(text_lines) * line_spacing
 
         # Calculate the starting y-coordinate to center the text vertically
-        start_y = (self.screen.get_height() - total_text_height) // 2
+        start_y = (self.screen.get_height() - total_text_height) // len(text_lines)
         return start_y
     
     def writeToScreen(self, text_lines, font):
@@ -60,9 +60,24 @@ class Display:
         pygame.display.flip()
 
     def displayNextGame(self, nextGameTime):
+        splitStrings = nextGameTime.split(',')
+        date = splitStrings[0]
+        time = splitStrings[1]
         text_lines = [
-            "The next game is at ",
-            nextGameTime
+            "The next game is ",
+            "{} at ".format(date),
+            time
+        ]
+        self.writeToScreen(text_lines, self.font)
+        pygame.display.flip()
+
+    def displayTodayGame(self, nextGameTime):
+        splitStrings = nextGameTime.split(',')
+        time = splitStrings[1]
+        text_lines = [
+            "The next game is ",
+            "today at ",
+            time
         ]
         self.writeToScreen(text_lines, self.font)
         pygame.display.flip()

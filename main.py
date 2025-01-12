@@ -39,7 +39,6 @@ def sleepUntilGame(gameTime):
 
 
 def runLoop():
-    # 2024020642
     global checkForNextGame
     global isGameToday
     global sleepForGame
@@ -59,8 +58,8 @@ def runLoop():
 
         if (not isGameToday):
             checkForNextGame = False
-            worker = threading.Thread(target=sleepUntilTomorrow, daemon=True)
-            worker.start()
+            sleepThread = threading.Thread(target=sleepUntilTomorrow, daemon=True)
+            sleepThread.start()
 
     if (isGameToday):
         checkForNextGame = False
@@ -69,7 +68,7 @@ def runLoop():
             liveGame = LiveGame(nextGame.nextGameId)
 
         if (not gameOn):
-            display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
+            display.displayTodayGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
             if (sleepForGame):
                 sleepForGame = False
@@ -104,12 +103,12 @@ def runLoop():
 
             #wait for game to start
             else:
-                display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
-
-        sleep(1)
+                display.displayTodayGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 
     else:
          display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
+
+    sleep(1)
 
 
 
