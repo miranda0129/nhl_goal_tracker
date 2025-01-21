@@ -4,6 +4,8 @@ from time import sleep
 from Display import Display
 import TimeDateHelpers
 
+pygame.init()
+
 TEAM_ABBREV = 'DET'
 nextGame = NextGame(TEAM_ABBREV)
 nextGame.getNextGame()
@@ -31,11 +33,11 @@ while running:
     sleep(1)
 
     if (counter > 3):
-        display.displayGoal()
-    #     if ((counter%5) == 0):
-    #         display.displayGoal()
-    #     else:
-    #       display.displayScore([counter, counter])
+        #display.displayGoal()
+        if ((counter%5) == 0):
+            display.displayGoal()
+        else:
+          display.displayScore([counter, counter], ["DET", "OTH"])
     else:
         display.displayNextGame(TimeDateHelpers.toTwelveHourTime(nextGame.nextGameTime))
 

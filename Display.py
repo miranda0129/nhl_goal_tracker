@@ -7,7 +7,7 @@ TIME_ZONE = 'US/Eastern'
 class Display:
     def __init__(self) -> None:
         self.font = pygame.font.Font(None, 62) 
-        self.screen = pygame.display.set_mode((480, 320), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((480, 320))
         self.redColour = (255, 19, 0)
         self.whiteColour = (255, 255, 255)
         self.boldFont = pygame.font.Font(None, 99) 
@@ -16,9 +16,10 @@ class Display:
         # Calculate the total height of all lines
         line_spacing = self.font.get_linesize()  # Spacing between lines
         total_text_height = len(text_lines) * line_spacing
+        split_divider = len(text_lines) if len(text_lines) > 1 else 2
 
         # Calculate the starting y-coordinate to center the text vertically
-        start_y = (self.screen.get_height() - total_text_height) // len(text_lines)
+        start_y = (self.screen.get_height() - total_text_height) // split_divider
         return start_y
     
     def writeToScreen(self, text_lines, font):
