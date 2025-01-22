@@ -6,6 +6,7 @@ import TimeDateHelpers
 import pygame
 from Display import Display
 import threading
+import urllib
 
 TEAM_ABBREV = 'DET'
 TIME_ZONE = 'US/Eastern'
@@ -110,9 +111,22 @@ def runLoop():
 
     sleep(1)
 
+def testInternetConnection():
+    try:
+        urllib.request.urlopen('http://google.com')
+        return True
+    except Exception:
+        return False
 
 
 if __name__ == "__main__":
+
+    while(not testInternetConnection()):
+        print('Waiting for internet connection...')
+        sleep(1)
+
+    print('Connected to internet')
+
     pygame.init()
     pygame.mouse.set_visible(False)
     display = Display() 
