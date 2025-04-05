@@ -14,7 +14,7 @@ main.py contains the constant TEAM_ABBREV which sets team value for which you ar
 
 ### Testing
 
-testDisplay.py is a driver classed that has been used to test the various text displayed throughout time. In particular the goal animation
+testDisplay.py is a driver class that has been used to test the various text displayed throughout time. In particular the goal animation
 
 ### Context
 
